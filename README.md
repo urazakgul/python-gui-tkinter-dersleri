@@ -2769,6 +2769,112 @@ pencere.mainloop()
 Seçilen tarih: 17/06/2023
 ```
 
+### 2.22. Drag & Drop
+
+Sürükle bırak yönteminin nasıl yapılacağını inceleyelim.
+
+```python
+from tkinter import *
+
+pencere = Tk()
+pencere.title("Uygulamaya Hoş Geldiniz!")
+pencere.geometry("600x450")
+
+pencere.mainloop()
+```
+
+Bir tane etiket tanımlayalım.
+
+```python
+etiket = Label(
+    pencere,
+    bg="red",
+    fg="white",
+    width=15,
+    height=5,
+    text="Sürükle Beni",
+    font=20
+)
+etiket.place(x=0, y=0)
+```
+
+Pencerenin sol üst köşesine bir tane etiket koyduk.
+
+![](./imgs/dragdrop.PNG)
+
+Amacımız bu etiketi sürükleyip istediğimiz yere bırakmak.
+
+Şimdi iki tane fonksiyon tanımlayacağız: `surukleBasla` ve `surukleHareket`.
+
+```python
+def surukleBasla(event):
+    bilesen = event.widget
+    bilesen.baslaX = event.x
+    bilesen.baslaY = event.y
+
+def surukleHareket(event):
+    bilesen = event.widget
+    x = bilesen.winfo_x() - bilesen.baslaX + event.x
+    y = bilesen.winfo_y() - bilesen.baslaY + event.y
+    bilesen.place(x=x,y=y)
+```
+
+Aşağıdaki adımı da yapıp ne yaptığımıza bakalım.
+
+```python
+etiket.bind("<Button-1>",surukleBasla)
+etiket.bind("<B1-Motion>",surukleHareket)
+```
+
+`surukleBasla` fonksiyonu, bir fare tıklaması başladığında çalışacak olan bir olay işleyicidir. Fonksiyon, tıklanan bileşenin başlangıç konumunu kaydeder. `event.widget` ifadesi, olayın gerçekleştiği bileşeni temsil eder. Bu kodda, fare tıklamasının gerçekleştiği bileşeni `bilesen` değişkenine atarız. `event.x ifadesi`, fare tıklamasının x koordinatını temsil eder. Bu değeri `bilesen.baslaX` olarak saklarız. `event.y ifadesi`, fare tıklamasının y koordinatını temsil eder. Bu değeri `bilesen.baslaY` olarak saklarız.
+
+`surukleHareket` fonksiyonu, fare sürüklendiğinde çalışacak olan bir olay işleyicidir. Fonksiyon, etiketin yeni konumunu hesaplar ve yerleştirir. `event.widget` ifadesi, olayın gerçekleştiği bileşeni temsil eder. Bu kodda, fare sürükleme hareketinin gerçekleştiği bileşeni `bilesen` değişkenine atarız. `bilesen.winfo_x()` ifadesi, bileşenin mevcut x konumunu temsil eder. `bilesen.baslaX` ifadesi, bileşenin sürükleme işlemi başladığındaki `başlangıç x konum`unu temsil eder. `event.x` ifadesi, fare sürükleme hareketinin anlık x konumunu temsil eder. `bilesen.winfo_y()` ifadesi, bileşenin mevcut y konumunu temsil eder. `bilesen.baslaY` ifadesi, bileşenin sürükleme işlemi başladığındaki başlangıç y konumunu temsil eder. `event.y` ifadesi, fare sürükleme hareketinin anlık y konumunu temsil eder. Yeni bileşen konumunu şu şekilde hesaplarız: `Yeni x konumu: mevcut x konumu - başlangıç x konumu + fare sürükleme hareketinin anlık x konumu`, `Yeni y konumu: mevcut y konumu - başlangıç y konumu + fare sürükleme hareketinin anlık y konumu`. Son olarak, `bilesen.place(x=x, y=y)` ifadesiyle bileşenin yeni konumunu ayarlarız.
+
+`etiket.bind("<Button-1>",surukleBasla)` ifadesi, etikete sol fare tıklaması (`Button-1`) olayını bağlar. Yani, sol fare düğmesine basıldığında `surukleBasla` fonksiyonu çalışır.
+
+`etiket.bind("<B1-Motion>",surukleHareket)` ifadesi, etiketin fare sürükleme (`B1-Motion`) olayına bağlanır.
+
+Kodun tamamını görelim.
+
+```python
+from tkinter import *
+
+pencere = Tk()
+pencere.title("Uygulamaya Hoş Geldiniz!")
+pencere.geometry("600x450")
+
+def surukleBasla(event):
+    bilesen = event.widget
+    bilesen.baslaX = event.x
+    bilesen.baslaY = event.y
+
+def surukleHareket(event):
+    bilesen = event.widget
+    x = bilesen.winfo_x() - bilesen.baslaX + event.x
+    y = bilesen.winfo_y() - bilesen.baslaY + event.y
+    bilesen.place(x=x,y=y)
+
+etiket = Label(
+    pencere,
+    bg="red",
+    fg="white",
+    width=15,
+    height=5,
+    text="Sürükle Beni",
+    font=20
+)
+etiket.place(x=0, y=0)
+
+etiket.bind("<Button-1>",surukleBasla)
+etiket.bind("<B1-Motion>",surukleHareket)
+
+pencere.mainloop()
+```
+
+Sürükleyip bırakılan konum aşağıdaki gibidir.
+
+![](./imgs/dragdrop2.PNG)
+
 # 3. Uygulama: Hisse Senedi Görüntüleyici (Stock Viewer)
 
 ---
