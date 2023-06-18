@@ -1,4 +1,4 @@
-# Python GUI - Tkinter
+# Python GUI - Tkinter Dersleri
 
 ## İçindekiler
 
